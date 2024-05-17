@@ -9,3 +9,7 @@
 # Do the thing
 
 `nargo prove` and `nargo verify`
+
+# Generate the verifier
+
+`nargo codegen-verifier`
