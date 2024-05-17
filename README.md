@@ -6,6 +6,6 @@
 
 `noirup`
 
-# Do the thing
+# Do the thing
 
 `nargo prove` and `nargo verify`
