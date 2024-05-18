@@ -291,8 +291,8 @@ unconstrained fn forward_prop(
 
 fn main(
     img: [Field; IMAGE_SIZE],
-    w_hidden: pub [Float; HIDDEN_SIZE],
-    w_output: pub [Float; OUTPUT_SIZE],
+    w_hidden: [Float; HIDDEN_SIZE],
+    w_output: [Float; OUTPUT_SIZE],
     digit: pub Field
 ) {
     let output = forward_prop(img, w_hidden, w_output);
