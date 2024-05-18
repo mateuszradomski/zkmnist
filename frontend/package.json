@@ -10,8 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@noir-lang/acvm_js": "^0.45.0",
     "@noir-lang/backend_barretenberg": "0.27.0",
     "@noir-lang/noir_js": "0.27.0",
+    "@noir-lang/noir_wasm": "^0.29.0",
+    "@noir-lang/noirc_abi": "^0.29.0",
+    "@noir-lang/types": "^0.29.0",
     "clsx": "^2.1.1",
     "fabric": "^5.3.0",
     "react": "^18.2.0",
