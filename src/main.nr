@@ -290,8 +290,10 @@ fn main(x: Float, y: Float) {
     println(y);
     let res = divFloats(x, y);
     let res2 = mulFloats(x, res);
+    let res3 = divFloats(x, res2);
     println(res);
     println(res2);
+    println(res3);
 }
 
 #[test]
@@ -301,3 +303,7 @@ fn test_main() {
         Float { sign: 0, mantissa: 19278346, exponent: 100 }
     );
 }
+
+0.0002344
+
+2344000 * 10**(90 - 100)
