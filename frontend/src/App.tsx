@@ -1,7 +1,11 @@
+import MNISTBoard from './components/MNISTDraw';
+
 function App() {
   return (
     <>
-      <div className="">App</div>
+      <div className="w-full">
+        <MNISTBoard />
+      </div>
     </>
   );
 }
