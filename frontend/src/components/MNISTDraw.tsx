@@ -1,69 +1,98 @@
-import { memo, useCallback, useState } from "react";
-import cn from "../utils/cn";
+import { useEffect, useRef } from "react";
+import { fabric } from "fabric";
+import Button from "./Button";
 
-const SIZE = 28;
+export function MNISTDraw(props: {
+	setProcessedImage: (data: Uint8Array) => void;
+}) {
+	const fabricRef = useRef<fabric.Canvas>(null);
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const scaledCanvasRef = useRef<HTMLCanvasElement>(null);
 
-interface MNISTBoardProps {
-	grid: number[][];
-	setGrid: (grid: number[][]) => void;
-}
+	function resetFabric() {
+		if (!fabricRef.current) return;
+		fabricRef.current.clear();
+	}
 
-export default function MNISTBoard({ grid, setGrid }: MNISTBoardProps) {
-	const [mouseDown, setMouseDown] = useState(false);
+	useEffect(() => {
+		const initFabric = () => {
+			const canvas = new fabric.Canvas(canvasRef.current);
+			canvas.setWidth(560);
+			canvas.setHeight(560);
 
-	const handleDraw = useCallback(
-		(x: number, y: number) => {
-			if (!mouseDown) return;
-			const newArray = [];
-			for (let i = 0; i < grid.length; i++) newArray[i] = grid[i].slice();
-			newArray[x][y] = grid[x][y] === 0 ? 1 : 0;
-			setGrid(newArray);
-		},
-		[mouseDown, grid, setGrid],
-	);
+			canvas.isDrawingMode = true;
+			canvas.freeDrawingBrush.width = 32;
+			canvas.freeDrawingBrush.color = "#000000";
+			canvas.backgroundColor = "#ffffff";
+			canvas.renderAll();
+
+			// @ts-ignore
+			fabricRef.current = canvas;
+		};
+
+		const disposeFabric = () => {
+			fabricRef.current?.dispose();
+		};
+
+		initFabric();
+
+		return () => {
+			disposeFabric();
+		};
+	}, []);
+
+	function processImage(canvas: HTMLCanvasElement): Uint8Array {
+		// Convert on-screen image to something we can feed into our model.
+		const ctx = canvas.getContext("2d");
+		if (!ctx) throw new Error("Could not get 2d context");
+		const ctxScaled = scaledCanvasRef.current?.getContext("2d");
+		if (!ctxScaled)
+			throw new Error("Could not get 2d context for scaled canvas");
+
+		ctxScaled.save();
+		ctxScaled.clearRect(0, 0, ctxScaled.canvas.height, ctxScaled.canvas.width);
+		ctxScaled.scale(28.0 / ctx.canvas.width, 28.0 / ctx.canvas.height);
+		ctxScaled.drawImage(canvas, 0, 0);
+		const { data } = ctxScaled.getImageData(0, 0, 28, 28);
+
+		ctxScaled.restore();
+		// Normalize the data
+		const pixels = new Uint8Array(28 * 28);
+		for (let i = 0; i < 28 * 28; i++) {
+			const r = data[i * 4];
+			const g = data[i * 4 + 1];
+			const b = data[i * 4 + 2];
+			// set 1 if the pixel is dark, 0 if it's light
+			pixels[i] = 1 - (r + g + b) / 3 / 255;
+		}
+		return pixels;
+	}
 
 	return (
-		<div
-			className="w-[560px] h-[560px]"
-			style={{
-				display: "grid",
-				gridTemplateColumns: `repeat(${SIZE}, 1fr)`,
-				gridTemplateRows: `repeat(${SIZE}, 1fr)`,
-				gap: 0,
-			}}
-			onMouseDown={() => setMouseDown(true)}
-			onMouseUp={() => setMouseDown(false)}
-		>
-			{grid.map((r, a) =>
-				r.map((c, i) => (
-					<Cell
-						key={`element-${a}-${i}`}
-						x={a}
-						y={i}
-						handleDraw={handleDraw}
-						value={c}
-					/>
-				)),
-			)}
+		<div>
+			<canvas ref={canvasRef} className="h-[560px] w-[560px] border" />
+			<canvas className="hidden" ref={scaledCanvasRef} />
+			<div className="flex w-full justify-between mt-4">
+				<Button
+					type="button"
+					onClick={() => {
+						if (!canvasRef.current) return;
+						props.setProcessedImage(processImage(canvasRef.current));
+					}}
+				>
+					Process
+				</Button>
+				<Button
+					type="reset"
+					onClick={() => {
+						resetFabric();
+					}}
+				>
+					Reset grid
+				</Button>
+			</div>
 		</div>
 	);
 }
 
-interface CellProps {
-	x: number;
-	y: number;
-	value: number;
-	handleDraw: (x: number, y: number) => void;
-}
-
-const Cell: React.FC<CellProps> = memo(({ x, y, value, handleDraw }) => {
-	return (
-		<div
-			className={cn(
-				"w-[20px] h-[20px] border border-black",
-				value === 1 ? "bg-black" : "bg-white",
-			)}
-			onMouseEnter={() => handleDraw(x, y)}
-		/>
-	);
-});
+export default MNISTDraw;
