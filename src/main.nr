@@ -9,7 +9,7 @@ struct Float {
 global precision : Field = 7;
 
 // ReLU activation function used for neural network ML models
-fn relu(x : Float) -> Float {
+fn relu(x: Float) -> Float {
     let mut res = x;
     if x.sign as u64 == 1 {
         res = Float { sign: 0, mantissa: 0, exponent: 100 };
@@ -45,7 +45,7 @@ fn truncate(num: Float) -> Float {
         1000000000000000000000,
         10000000000000000000000,
         100000000000000000000000,
-        1000000000000000000000000,
+        1000000000000000000000000
     ];
 
     let maxValue : Field = 10.pow_32(precision);
@@ -77,7 +77,7 @@ fn truncate(num: Float) -> Float {
 }
 
 // Multiplication of Float numbers
-fn mulFloats(x : Float, y : Float) -> Float {
+fn mulFloats(x: Float, y: Float) -> Float {
     let mant = x.mantissa * y.mantissa;
     let exp = x.exponent + y.exponent - 100;
     let mut sign : Field = 0;
@@ -86,12 +86,11 @@ fn mulFloats(x : Float, y : Float) -> Float {
         sign = 1;
     }
 
-    truncate(Float { sign: sign, mantissa: mant, exponent: exp })
+    truncate(Float { sign, mantissa: mant, exponent: exp })
 }
 
 // Dividing of Float numbers
-fn divFloats(x : Float, y: Float) -> Float {
-
+fn divFloats(x: Float, y: Float) -> Float {
     assert(y.mantissa as u64 > 0);
 
     let mut exp1: Field = x.exponent;
@@ -126,11 +125,11 @@ fn divFloats(x : Float, y: Float) -> Float {
         new_sign = 1;
     }
 
-    Float{sign: new_sign, mantissa: new_mant as Field, exponent: new_exp}
+    Float { sign: new_sign, mantissa: new_mant as Field, exponent: new_exp }
 }
 
 // Sumation of Float numbers
-fn addFloats(x : Float, y : Float) -> Float {
+fn addFloats(x: Float, y: Float) -> Float {
     let mut mant_1 = x.mantissa;
     let mut mant_2 = y.mantissa;
 
@@ -148,11 +147,11 @@ fn addFloats(x : Float, y : Float) -> Float {
     let mut pow10 : Field = 10.pow_32(diff);
 
     if x.exponent as u64 < y.exponent as u64 {
-      mant_2 *= pow10;
-      exp_1 = x.exponent;
+        mant_2 *= pow10;
+        exp_1 = x.exponent;
     } else {
-      mant_1 *= pow10;
-      exp_1 = y.exponent;
+        mant_1 *= pow10;
+        exp_1 = y.exponent;
     }
 
     let mut sum_mant = mant_1 + mant_2;
@@ -167,12 +166,15 @@ fn addFloats(x : Float, y : Float) -> Float {
         }
     }
 
-    truncate(Float { sign: sign, mantissa: sum_mant, exponent: exp_1 })
+    truncate(Float { sign, mantissa: sum_mant, exponent: exp_1 })
 }
 
 // Subtraction of float numbers
-fn subFloats(x : Float, y : Float) -> Float {
-    addFloats(x, Float { sign: 1 - y.sign, mantissa: y.mantissa, exponent: y.exponent })
+fn subFloats(x: Float, y: Float) -> Float {
+    addFloats(
+        x,
+        Float { sign: 1 - y.sign, mantissa: y.mantissa, exponent: y.exponent }
+    )
 }
 
 fn isGreaterFloats(x: Float, y: Float) -> bool {
@@ -181,35 +183,25 @@ fn isGreaterFloats(x: Float, y: Float) -> bool {
     if x.sign as u64 == 1 {
         if y.sign as u64 == 0 {
             result = false;
-        } else {
-            if x.exponent as u64 > y.exponent as u64 {
-                result = false;
-            } else if x.exponent as u64 < y.exponent as u64 {
-                result = true;
-            } else {
-                if x.mantissa as u64 > y.mantissa as u64 {
-                    result = false;
-                } else {
-                    result = true;
-                }
-            }
-        }
-    } else {
-        if y.sign as u64 == 1 {
+        } else if x.exponent as u64 > y.exponent as u64 {
+            result = false;
+        } else if x.exponent as u64 < y.exponent as u64 {
             result = true;
+        } else if x.mantissa as u64 > y.mantissa as u64 {
+            result = false;
         } else {
-            if x.exponent as u64 > y.exponent as u64 {
-                result = true;
-            } else if x.exponent as u64 < y.exponent as u64 {
-                result = false;
-            } else {
-                if x.mantissa as u64 > y.mantissa as u64 {
-                    result = true;
-                } else {
-                    result = false;
-                }
-            }
+            result = true;
         }
+    } else if y.sign as u64 == 1 {
+        result = true;
+    } else if x.exponent as u64 > y.exponent as u64 {
+        result = true;
+    } else if x.exponent as u64 < y.exponent as u64 {
+        result = false;
+    } else if x.mantissa as u64 > y.mantissa as u64 {
+        result = true;
+    } else {
+        result = false;
     }
 
     result
@@ -225,14 +217,16 @@ global CONV_IMAGE_SIZE_WITH_BIAS = CONV_IMAGE_SIZE + 1;
 global HIDDEN_SIZE = IMAGE_SIZE * CONV_IMAGE_SIZE;
 global OUTPUT_SIZE = CONV_IMAGE_SIZE * DIGITS;
 
-fn forward_prop(img: [Field; IMAGE_SIZE],
-                w_hidden: [Float; HIDDEN_SIZE],
-                w_output: [Float; OUTPUT_SIZE]) -> Field {
+fn forward_prop(
+    img: [Field; IMAGE_SIZE],
+    w_hidden: [Float; HIDDEN_SIZE],
+    w_output: [Float; OUTPUT_SIZE]
+) -> Field {
     // @luca make sure this is 0.0 and 4.0
-    let floatZero = Float{ sign: 0, exponent: 0, mantissa: 0 };
-    let floatOne = Float{ sign: 0, exponent: 100, mantissa: 1 };
-    let lookupTable = [ floatZero, floatOne ];
-    let floatFour = Float{ sign: 0, exponent: 0, mantissa: 4 };
+    let floatZero = Float { sign: 0, exponent: 0, mantissa: 0 };
+    let floatOne = Float { sign: 0, exponent: 100, mantissa: 1 };
+    let lookupTable = [floatZero, floatOne];
+    let floatFour = Float { sign: 0, exponent: 0, mantissa: 4 };
     let mut conv_img = [floatZero; CONV_IMAGE_SIZE_WITH_BIAS];
 
     for i in 0..K {
@@ -244,7 +238,7 @@ fn forward_prop(img: [Field; IMAGE_SIZE],
             sum = addFloats(sum, lookupTable[img[(2 * i + 1) * 28 + (2 * j + 1)]]);
             conv_img[i * 14 + j] = divFloats(conv_img[i * 14 + j], floatFour);
         }
-    };
+    }
     conv_img[196] = Float{ sign: 0, exponent: 100, mantissa: 1 }; // @luca make sure this is 1.0
 
     for i in 0..HIDDEN_SIZE {
@@ -279,6 +273,7 @@ fn forward_prop(img: [Field; IMAGE_SIZE],
     imax as Field
 }
 
+/*
 fn main(img: [Field; IMAGE_SIZE],
         w_hidden: pub [Float; HIDDEN_SIZE],
         w_output: pub [Float; OUTPUT_SIZE],
@@ -287,4 +282,22 @@ fn main(img: [Field; IMAGE_SIZE],
     assert(img[0] != 4);
     let output = forward_prop(img, w_hidden, w_output);
     assert(output == digit);
+        }
+*/
+
+fn main(x: Float, y: Float) {
+    println(x);
+    println(y);
+    let res = divFloats(x, y);
+    let res2 = mulFloats(x, res);
+    println(res);
+    println(res2);
+}
+
+#[test]
+fn test_main() {
+    main(
+        Float { sign: 0, mantissa: 20777782, exponent: 100 },
+        Float { sign: 0, mantissa: 19278346, exponent: 100 }
+    );
 }

@@ -1,1 +1,9 @@
-x = "2"
+[x]
+mantissa = 123
+sign = 0
+exponent = 100
+
+[y]
+mantissa = 123
+sign = 0
+exponent = 100
