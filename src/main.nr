@@ -245,31 +245,34 @@ unconstrained fn forward_prop(
             sum = addFloats(sum, lookupTable[img[2 * i * 28 + (2 * j + 1)]]);
             sum = addFloats(sum, lookupTable[img[(2 * i + 1) * 28 + 2 * j]]);
             sum = addFloats(sum, lookupTable[img[(2 * i + 1) * 28 + (2 * j + 1)]]);
-            conv_img[i * 14 + j] = divFloats(conv_img[i * 14 + j], floatFour);
+            conv_img[i * 14 + j] = divFloats(sum, floatFour);
         }
     }
 
     conv_img[196] = floatOne;
 
+    let mut layer_hidden = [floatZero; 100 + 1];
     for i in 0..100 {
         let mut sum = floatZero;
         for j in 0..CONV_IMAGE_SIZE_WITH_BIAS {
             sum = addFloats(sum, mulFloats(conv_img[j], w_hidden[i * CONV_IMAGE_SIZE_WITH_BIAS + j]));
         }
-        conv_img[i] = relu(sum);
+        layer_hidden[i] = relu(sum);
     }
+    layer_hidden[100] = floatOne;
 
     let mut esum = floatZero;
     let mut layer_output = [floatZero; DIGITS];
     for i in 0..DIGITS {
         let mut sum = floatZero;
         for j in 0..100 {
-            sum = addFloats(sum, mulFloats(conv_img[j], w_output[i * 100 + j]));
+            sum = addFloats(sum, mulFloats(layer_hidden[j], w_output[i * 101 + j]));
         }
-        layer_output[i] = taylorExponent(sum);
+        layer_output[i] = sum;
         esum = addFloats(esum, layer_output[i]);
     }
 
+    println(layer_output);
     let mut max = layer_output[0];
     let mut imax = 0;
     for i in 0..DIGITS {
