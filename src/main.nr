@@ -5,6 +5,4 @@ fn main(x: Field) {
 #[test]
 fn test_main() {
     main(2);
-    // Uncomment to make test fail
-    // main(1, 1);
 }
