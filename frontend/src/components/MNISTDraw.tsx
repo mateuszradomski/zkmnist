@@ -63,7 +63,7 @@ export function MNISTDraw(props: {
 			const g = data[i * 4 + 1];
 			const b = data[i * 4 + 2];
 			// set 1 if the pixel is dark, 0 if it's light
-			pixels[i] = 1 - (r + g + b) / 3 / 255;
+			pixels[i] = Math.floor(1 - (r + g + b) / 3 / 255);
 		}
 		return pixels;
 	}
