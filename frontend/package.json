@@ -16,6 +16,7 @@
     "@noir-lang/noir_wasm": "^0.29.0",
     "@noir-lang/noirc_abi": "^0.29.0",
     "@noir-lang/types": "^0.29.0",
+    "@oktupol/base-emoji": "^1.1.1",
     "clsx": "^2.1.1",
     "fabric": "^5.3.0",
     "react": "^18.2.0",

@@ -9,6 +9,7 @@ import {
 import circuit from "../../../target/mnist.json";
 import ConfettiExplosion from "react-confetti-explosion";
 import explosionImg from "../../static/explosion.gif";
+import { BaseEmoji } from '@oktupol/base-emoji';
 
 function Verify() {
 	const [proof, setProof] = useState("");
@@ -27,7 +28,8 @@ function Verify() {
 	async function handleOffChainVerification() {
 		if (!proof || !noir || !digit) return;
 
-		const proofAsByteArray = byteArrFromHexStr(proof);
+        const proofDecoded = BaseEmoji.decode(proof, { format: 'string' }) as string;
+		const proofAsByteArray = byteArrFromHexStr(proofDecoded);
 		console.log("Verifying...");
 		const result = await noir.verifyProof({
 			publicInputs: [digitToHexString(+digit)],
@@ -46,12 +48,14 @@ function Verify() {
 	}
 
 	return (
-		<div className="w-full flex flex-col gap-4 items-center justify-center">
+		<div className="w-full h-screen flex flex-col gap-4 items-center justify-center">
 			<div className="w-[560px]">
 				<h1 className="text-2xl mb-2 font-semibold">Verify proof</h1>
 
 				<Input label="Digit" value={digit} setValue={setDigit} />
-				<Textarea label="Proof" value={proof} setValue={setProof} />
+            </div>
+            <div className="w-full h-screen">
+				<Textarea label="Proof" value={proof} setValue={setProof} className="w-full h-screen" />
 				<div className="flex w-full justify-end mt-4">
 					<Button
 						className="relative"
