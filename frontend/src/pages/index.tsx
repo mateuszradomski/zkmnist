@@ -59,6 +59,10 @@ function MainPage() {
 
 	// https://noir-lang.org/docs/tutorials/noirjs_app
 	const handleGenerateProof = async () => {
+    if(!noir) throw new Error("Noir not initialized");
+    if (!processedImage) throw new Error("No image to process");
+    if (!digit) throw new Error("No digit to process");
+
 		await noir.init();
 
 		const input = {
