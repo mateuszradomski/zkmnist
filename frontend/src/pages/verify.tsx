@@ -15,6 +15,7 @@ function Verify() {
   const [proof, setProof] = useState("");
   const [noir, setNoir] = useState<Noir>();
   const [digit, setDigit] = useState("");
+  const [score, setScore] = useState("");
   const [isExploding, setIsExploding] = useState(false);
   const [isBurning, setIsBurning] = useState(false);
 
@@ -34,7 +35,7 @@ function Verify() {
     const proofAsByteArray = byteArrFromHexStr(proofDecoded);
     console.log("Verifying...");
     const result = await noir.verifyProof({
-      publicInputs: [digitToHexString(+digit)],
+      publicInputs: [digitToHexString(+digit), digitToHexString(+score)],
       proof: proofAsByteArray,
     });
     console.log("Verification result: ", result);
@@ -55,6 +56,7 @@ function Verify() {
         <h1 className="text-2xl mb-2 font-semibold">Verify proof</h1>
 
         <Input label="Digit" value={digit} setValue={setDigit} />
+        <Input label="Score" value={score} setValue={setScore} />
       </div>
       <div className="w-full h-3/5">
         <Textarea
