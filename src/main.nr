@@ -273,6 +273,13 @@ fn forward_prop(
     imax as Field
 }
 
+fn taylorExponent(x: Float) -> Float {
+  let floatHalf = Float { sign: 0, exponent: 93, mantissa: 5000000 };
+  let floatOne = Float { sign: 0, exponent: 100, mantissa: 1 };
+  // 1 + x + 0.5x^2
+  addFloats(addFloats(floatOne, x), mulFloats(mulFloats(x, x), floatHalf))
+}
+
 /*
 fn main(img: [Field; IMAGE_SIZE],
         w_hidden: pub [Float; HIDDEN_SIZE],
