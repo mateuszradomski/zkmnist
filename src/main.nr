@@ -207,6 +207,13 @@ fn isGreaterFloats(x: Float, y: Float) -> bool {
     result
 }
 
+fn taylorExponent(x: Float) -> Float {
+  let floatHalf = Float { sign: 0, exponent: 93, mantissa: 5000000 };
+  let floatOne = Float { sign: 0, exponent: 100, mantissa: 1 };
+  // 1 + x + 0.5x^2
+  addFloats(addFloats(floatOne, x), mulFloats(mulFloats(x, x), floatHalf))
+}
+
 global N = 28;
 global K = 14;
 global DIGITS = 10;
@@ -256,7 +263,7 @@ fn forward_prop(
         for j in 0..HIDDEN_SIZE {
             sum = addFloats(sum, mulFloats(conv_img[j], w_output[i * HIDDEN_SIZE + j]));
         }
-        layer_output[i] = sum; // @luca this should be Math.exp(sum);
+        layer_output[i] = taylorExponent(sum);
         esum = addFloats(esum, layer_output[i]);
     }
 
@@ -271,13 +278,6 @@ fn forward_prop(
     }
 
     imax as Field
-}
-
-fn taylorExponent(x: Float) -> Float {
-  let floatHalf = Float { sign: 0, exponent: 93, mantissa: 5000000 };
-  let floatOne = Float { sign: 0, exponent: 100, mantissa: 1 };
-  // 1 + x + 0.5x^2
-  addFloats(addFloats(floatOne, x), mulFloats(mulFloats(x, x), floatHalf))
 }
 
 /*
@@ -310,7 +310,3 @@ fn test_main() {
         Float { sign: 0, mantissa: 19278346, exponent: 100 }
     );
 }
-
-0.0002344
-
-2344000 * 10**(90 - 100)
