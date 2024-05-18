@@ -1,5 +1,5 @@
 [package]
-name = "two_plus_two"
+name = "mnist"
 type = "bin"
 authors = [""]
 compiler_version = ">=0.28.0"

@@ -3,7 +3,7 @@ import { fabric } from "fabric";
 import Button from "./Button";
 
 export function MNISTDraw(props: {
-	setProcessedImage: (data: Uint8Array) => void;
+	setProcessedImage: (data: number[]) => void;
 }) {
 	const fabricRef = useRef<fabric.Canvas>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -41,7 +41,7 @@ export function MNISTDraw(props: {
 		};
 	}, []);
 
-	function processImage(canvas: HTMLCanvasElement): Uint8Array {
+	function processImage(canvas: HTMLCanvasElement): number[] {
 		// Convert on-screen image to something we can feed into our model.
 		const ctx = canvas.getContext("2d");
 		if (!ctx) throw new Error("Could not get 2d context");
@@ -57,7 +57,7 @@ export function MNISTDraw(props: {
 
 		ctxScaled.restore();
 		// Normalize the data
-		const pixels = new Uint8Array(28 * 28);
+		const pixels = new Array(28 * 28);
 		for (let i = 0; i < 28 * 28; i++) {
 			const r = data[i * 4];
 			const g = data[i * 4 + 1];

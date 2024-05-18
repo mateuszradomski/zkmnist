@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Button from "../components/Button";
 import Textarea from "../components/Textarea";
-import { noir } from "../utils/noir";
 
 function Verify() {
 	const [proof, setProof] = useState<string>("");
