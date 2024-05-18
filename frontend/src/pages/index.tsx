@@ -26,6 +26,7 @@ const weightsOutput = (w_output as [number, number, number][]).map(
 );
 
 import { compile, createFileManager } from "@noir-lang/noir_wasm";
+import MNISTBoard from "../components/Grid";
 
 export async function getCircuit() {
   const fm = createFileManager("/");
@@ -44,11 +45,24 @@ export async function getCircuit() {
   return result.program as CompiledCircuit;
 }
 
+const SIZE = 28;
+
 function MainPage() {
+  const emptyGrid = Array(SIZE)
+		.fill(null)
+		.map(() => Array(SIZE).fill(0)) as number[][];
+
   const [processedImage, setProcessedImage] = useState<number[]>();
   const [proof, setProof] = useState(new Uint8Array());
   const [noir, setNoir] = useState<Noir>();
   const [digit, setDigit] = useState<number>();
+  const [grid, setGrid] = useState<number[][]>(emptyGrid);
+
+  useEffect(() => {
+    // convert grid to processedImage
+    const processedImage = grid.flat();
+    setProcessedImage(processedImage);
+  }, [grid])
 
   useEffect(() => {
     // Load Noir
@@ -56,6 +70,10 @@ function MainPage() {
     const noir = new Noir(circuit as CompiledCircuit, backend);
     setNoir(noir);
   }, []);
+
+  const resetGrid = () => {
+		setGrid(emptyGrid);
+	};
 
   // https://noir-lang.org/docs/tutorials/noirjs_app
   const handleGenerateProof = async () => {
@@ -80,9 +98,27 @@ function MainPage() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col gap-4 items-center justify-center">
+    <div className="w-full flex flex-col gap-4 items-center justify-center">
       {/** Input digit */}
-      <MNISTDraw setProcessedImage={setProcessedImage} />
+      <div className="flex flex-col items-center">
+      <MNISTBoard grid={grid} setGrid={setGrid} />
+      <div className="flex w-full justify-between mt-4">
+      <Button
+					type="button"
+					onClick={() => {
+            if (!processedImage) return;
+						navigator.clipboard.writeText(`[${processedImage.join(",")}]`);
+            alert("Copied image to clipboard");
+					}}
+				>
+					Copy image
+				</Button>
+					<Button type="button" onClick={resetGrid}>
+						Reset grid
+					</Button>
+				</div>
+        </div>
+      {/* <MNISTDraw setProcessedImage={setProcessedImage} /> */}
       {/* <Button type="submit" onClick={handleGenerateProof}>
 				Generate Proof
 			</Button>
