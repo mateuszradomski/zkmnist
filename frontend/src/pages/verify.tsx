@@ -68,18 +68,18 @@ function Verify() {
 							/>
 						)}
 						{isBurning && (
-							<div className="absolute flex -left-32 -top-16">
+							<div className="absolute flex -left-60 -top-32">
 								<img
 									src={explosionImg}
-									className="w-32 h-32"
+									className="w-48 h-48"
 									alt="Explosion"
 								/><img
 									src={explosionImg}
-									className="w-32 h-32"
+									className="w-48 h-48"
 									alt="Explosion"
 								/><img
 									src={explosionImg}
-									className="w-32 h-32"
+									className="w-48 h-48"
 									alt="Explosion"
 								/>
 							</div>
