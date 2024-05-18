@@ -42,8 +42,17 @@ function MainPage() {
 					<div className="mt-4 font-semibold text-lg">Proof: {proof}</div>
 				)}
 			</div>
+      <div>{gridToInput(grid).join(',')}</div>
 		</div>
 	);
 }
 
 export default MainPage;
+
+function gridToInput(grid: number[][]): number[] {
+  const result = [];
+  for (const row of grid) {
+    result.push(...row);
+  }
+  return result;
+}
