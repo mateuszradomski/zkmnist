@@ -8,12 +8,14 @@ import {
 } from "@noir-lang/backend_barretenberg";
 import circuit from "../../../target/mnist.json";
 import ConfettiExplosion from "react-confetti-explosion";
+import explosionImg from "../../static/explosion.gif";
 
 function Verify() {
 	const [proof, setProof] = useState("");
 	const [noir, setNoir] = useState<Noir>();
 	const [digit, setDigit] = useState("");
 	const [isExploding, setIsExploding] = useState(false);
+	const [isBurning, setIsBurning] = useState(false);
 
 	useEffect(() => {
 		// Load Noir
@@ -35,6 +37,11 @@ function Verify() {
 		if (result) {
 			setIsExploding(true);
 			alert("Proof verified successfully!");
+		} else {
+			setIsBurning(true);
+			setTimeout(() => {
+				setIsBurning(false);
+			}, 800);
 		}
 	}
 
@@ -46,7 +53,11 @@ function Verify() {
 				<Input label="Digit" value={digit} setValue={setDigit} />
 				<Textarea label="Proof" value={proof} setValue={setProof} />
 				<div className="flex w-full justify-end mt-4">
-					<Button type="button" onClick={() => handleOffChainVerification()}>
+					<Button
+						className="relative"
+						type="button"
+						onClick={() => handleOffChainVerification()}
+					>
 						Verify proof
 						{isExploding && (
 							<ConfettiExplosion
@@ -55,6 +66,23 @@ function Verify() {
 								width={3000}
 								onComplete={() => setIsExploding(false)}
 							/>
+						)}
+						{isBurning && (
+							<div className="absolute flex -left-32 -top-16">
+								<img
+									src={explosionImg}
+									className="w-32 h-32"
+									alt="Explosion"
+								/><img
+									src={explosionImg}
+									className="w-32 h-32"
+									alt="Explosion"
+								/><img
+									src={explosionImg}
+									className="w-32 h-32"
+									alt="Explosion"
+								/>
+							</div>
 						)}
 					</Button>
 				</div>
