@@ -12,11 +12,11 @@ importers:
         specifier: ^0.45.0
         version: 0.45.0
       '@noir-lang/backend_barretenberg':
-        specifier: 0.27.0
-        version: 0.27.0
+        specifier: 0.29.0
+        version: 0.29.0
       '@noir-lang/noir_js':
-        specifier: 0.27.0
-        version: 0.27.0
+        specifier: 0.29.0
+        version: 0.29.0
       '@noir-lang/noir_wasm':
         specifier: ^0.29.0
         version: 0.29.0
@@ -86,8 +86,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@aztec/bb.js@0.32.0':
-    resolution: {integrity: sha512-93e4a2sAz/t6ObueFtZzpnPal+6D0p6NXBGwEfkjuadQDUwib+peHXH+7xq9LDHlZXtMWGL2cm0tLsZsccVSFg==}
+  '@aztec/bb.js@0.35.1':
+    resolution: {integrity: sha512-EWBDxj7fY7p4BP9zhVoHPmCd+h0HFBCy02DhI3p/CkgbuXHMy1wb0aIxJyQDzi+z7FrA6QME4SOzIx//ITRCCA==}
     hasBin: true
 
   '@babel/code-frame@7.24.2':
@@ -426,29 +426,20 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@noir-lang/acvm_js@0.43.0':
-    resolution: {integrity: sha512-ShA3FX4FCZuozbW9w9t8RCZkFGxhlxnKrdmE87j2sBbEnh45bxOC0hl3yaxqiVsw+s3zLjlNlxqNODm4oyKsow==}
-
   '@noir-lang/acvm_js@0.45.0':
     resolution: {integrity: sha512-FXyCNuKFBdX71WvxdoUdwdXLdL/G8Srix/b/geM5Ti+EUW81kH5/wwgDLYDdAXhO+GFlYvjFmBcA03InxmOevw==}
 
-  '@noir-lang/backend_barretenberg@0.27.0':
-    resolution: {integrity: sha512-4FLLpcp/eNTIJkA3R7HTjVihktI8IbqyMuqfJXzU7xFmaOMmEH60hBeEhE2DuYveWGNYX+O+SsPPmOh2UAvkaQ==}
+  '@noir-lang/backend_barretenberg@0.29.0':
+    resolution: {integrity: sha512-IrIDeXRCQ/dy/G5ZHmQvZuy7ryQ7bTkjKJqfzuP4/I2lqS8pot7SOXweSklateE7zDgTXeVxR7lZng6x297RjA==}
 
-  '@noir-lang/noir_js@0.27.0':
-    resolution: {integrity: sha512-9AVpipj9p8LkOx/Uk8MYPOVQKwJ20tyWqjihnyDno4dN/6kX2ICDuRBu70xLCW6voU2F6SL8YJqah14R6T2Nmw==}
+  '@noir-lang/noir_js@0.29.0':
+    resolution: {integrity: sha512-BSX5tfGw2PFY5m6TLPZ+pGHL59quvwubDZi050GAG+EG1CK1C4tv8A7H6otDScGgbt+e7edkgXA4ZWQQTjxK/Q==}
 
   '@noir-lang/noir_wasm@0.29.0':
     resolution: {integrity: sha512-tQTDJornF+UPdXOjdKYangwBEKCAr7pJoWPG+YTTakFtLfR156cFrWe8OiBjUSMjIwGck3zihLQ9IwETYTFTHw==}
 
-  '@noir-lang/noirc_abi@0.27.0':
-    resolution: {integrity: sha512-dPreK4s/YlkER2gyZfFeyynkA6pvn/ETaaFWpJZzVzTYmTpx4mpmVzo41sIAI60s2aW409qhJdyFcz0LgMLJrw==}
-
   '@noir-lang/noirc_abi@0.29.0':
     resolution: {integrity: sha512-Z8DwWw+lUDuMkBTx1X8RASEzT1nwXCHidhSlngtnc9scB284+PtAyXDV/5MQDr9onkzJqp1j6naHo57c6YlINg==}
-
-  '@noir-lang/types@0.27.0':
-    resolution: {integrity: sha512-T1JuoyPUfGP94HEQDitoHXo/jwxSm8cizL7brroJuOwFujiehpqreLHcV4fc0W4uOV/2l4BHQ7zntrQcfWqbbg==}
 
   '@noir-lang/types@0.29.0':
     resolution: {integrity: sha512-hO4uUVblodnm7xRfnguTGahkqlnFFuAL1IlIUkwlN7a42ix8rilpMKBu2gTNvYM0e3R+mlPQiCVpcAADZMoI9A==}
@@ -1638,7 +1629,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@aztec/bb.js@0.32.0':
+  '@aztec/bb.js@0.35.1':
     dependencies:
       comlink: 4.4.1
       commander: 10.0.1
@@ -1947,38 +1938,30 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@noir-lang/acvm_js@0.43.0': {}
-
   '@noir-lang/acvm_js@0.45.0': {}
 
-  '@noir-lang/backend_barretenberg@0.27.0':
+  '@noir-lang/backend_barretenberg@0.29.0':
     dependencies:
-      '@aztec/bb.js': 0.32.0
-      '@noir-lang/types': 0.27.0
+      '@aztec/bb.js': 0.35.1
+      '@noir-lang/types': 0.29.0
       fflate: 0.8.2
     transitivePeerDependencies:
       - supports-color
 
-  '@noir-lang/noir_js@0.27.0':
+  '@noir-lang/noir_js@0.29.0':
     dependencies:
-      '@noir-lang/acvm_js': 0.43.0
-      '@noir-lang/noirc_abi': 0.27.0
-      '@noir-lang/types': 0.27.0
+      '@noir-lang/acvm_js': 0.45.0
+      '@noir-lang/noirc_abi': 0.29.0
+      '@noir-lang/types': 0.29.0
 
   '@noir-lang/noir_wasm@0.29.0':
     dependencies:
       '@noir-lang/types': 0.29.0
       pako: 2.1.0
 
-  '@noir-lang/noirc_abi@0.27.0':
-    dependencies:
-      '@noir-lang/types': 0.27.0
-
   '@noir-lang/noirc_abi@0.29.0':
     dependencies:
       '@noir-lang/types': 0.29.0
-
-  '@noir-lang/types@0.27.0': {}
 
   '@noir-lang/types@0.29.0': {}
 

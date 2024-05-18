@@ -11,11 +11,29 @@ import { Noir } from "@noir-lang/noir_js";
 import Button from "../components/Button";
 
 const weightsHidden = (w_hidden as [number, number, number][]).map(
-	([exponent, mantissa, sign]) => ({ exponent, mantissa, sign }),
+	([sign, mantissa, exponent]) => ({ exponent: 100 - exponent, mantissa, sign }),
 );
 const weightsOutput = (w_output as [number, number, number][]).map(
-	([exponent, mantissa, sign]) => ({ exponent, mantissa, sign }),
+	([sign, mantissa, exponent]) => ({ exponent: 100 - exponent, mantissa, sign }),
 );
+
+import { compile, createFileManager } from '@noir-lang/noir_wasm';
+
+export async function getCircuit() {
+  const fm = createFileManager('/');
+  const main = (await fetch(new URL(`../../static/main.nr`, import.meta.url)))
+    .body as ReadableStream<Uint8Array>;
+  const nargoToml = (await fetch(new URL(`../../static/Nargo.toml`, import.meta.url)))
+    .body as ReadableStream<Uint8Array>;
+
+  fm.writeFile('./src/main.nr', main);
+  fm.writeFile('./Nargo.toml', nargoToml);
+  const result = await compile(fm);
+  if (!('program' in result)) {
+    throw new Error('Compilation failed');
+  }
+  return result.program as CompiledCircuit;
+}
 
 function MainPage() {
 	const [processedImage, setProcessedImage] = useState<number[]>();
@@ -32,10 +50,7 @@ function MainPage() {
 
 	// https://noir-lang.org/docs/tutorials/noirjs_app
 	const handleGenerateProof = async () => {
-		if (!noir) throw new Error("No noir instance");
-		if (!processedImage) throw new Error("No processed image");
-		if (digit === undefined) throw new Error("No digit");
-		console.log("logs", "Generating proof... ⌛");
+        await noir.init();
 
 		const input = {
 			img: processedImage,
@@ -43,7 +58,10 @@ function MainPage() {
 			w_output: weightsOutput,
 			digit,
 		};
+        console.log(input)
+        console.log("here1")
 		const proof = await noir.generateProof(input);
+        console.log("here2")
 		console.log(proof, "Generating proof... ✅");
 		setProof(proof.proof);
 	};
