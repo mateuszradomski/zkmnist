@@ -7,11 +7,16 @@ import {
 	CompiledCircuit,
 } from "@noir-lang/backend_barretenberg";
 import circuit from "../../../target/mnist.json";
+import ConfettiExplosion from 'react-confetti-explosion';
+
 
 function Verify() {
 	const [proof, setProof] = useState("");
 	const [noir, setNoir] = useState<Noir>();
 	const [digit, setDigit] = useState("");
+  const [isExploding, setIsExploding] = useState(false);
+
+
 
 	useEffect(() => {
 		// Load Noir
@@ -30,6 +35,9 @@ function Verify() {
 			proof: proofAsByteArray,
 		});
 		console.log("Verification result: ", result);
+    if (result) {
+      setIsExploding(true);
+    }
 	}
 
 	return (
@@ -42,6 +50,7 @@ function Verify() {
 				<div className="flex w-full justify-end mt-4">
 					<Button type="button" onClick={() => handleOffChainVerification()}>
 						Verify proof
+            {isExploding && <ConfettiExplosion />}
 					</Button>
 				</div>
 			</div>
@@ -59,7 +68,7 @@ function byteArrFromHexStr(hexString: string) {
 }
 
 function digitToHexString(digit: number) {
-	return digit.toString(16).padStart(64, "0");
+	return '0x' + digit.toString(16).padStart(64, "0");
 }
 
 export default Verify;
