@@ -5,6 +5,8 @@ import {
 
 // import circuit from "./circuit.json";
 
+// https://noir-lang.org/docs/tutorials/noirjs_app
+
 import { Noir } from "@noir-lang/noir_js";
 
 let noir: Noir | undefined;

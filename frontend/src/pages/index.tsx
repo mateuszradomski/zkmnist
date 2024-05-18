@@ -16,6 +16,7 @@ function MainPage() {
 		setGrid(emptyGrid);
 	};
 
+	// https://noir-lang.org/docs/tutorials/noirjs_app
 	// const handleGenerateProof = async () => {
 	// 	if (!noir) throw new Error("No noir instance");
 	// 	console.log("logs", "Generating proof... ⌛");

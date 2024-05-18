@@ -6,8 +6,8 @@ import { noir } from "../utils/noir";
 function Verify() {
 	const [proof, setProof] = useState<string>("");
 
+	// https://noir-lang.org/docs/tutorials/noirjs_app
 	// const verifyProof = async () => {
-	// 	noir?.verifyProof(proof);
 	// };
 
 	return (
