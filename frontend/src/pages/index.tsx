@@ -59,9 +59,9 @@ function MainPage() {
 
 	// https://noir-lang.org/docs/tutorials/noirjs_app
 	const handleGenerateProof = async () => {
-    if(!noir) throw new Error("Noir not initialized");
-    if (!processedImage) throw new Error("No image to process");
-    if (!digit) throw new Error("No digit to process");
+		if (!noir) throw new Error("Noir not initialized");
+		if (!processedImage) throw new Error("No image to process");
+		if (!digit) throw new Error("No digit to process");
 
 		await noir.init();
 
@@ -82,25 +82,13 @@ function MainPage() {
 	return (
 		<div className="w-full flex flex-col gap-4 items-center justify-center">
 			{/** Input digit */}
-			<label htmlFor="digit" className="font-semibold text-lg">
-				Digit:
-			</label>
-			<input
-				className="border p-2"
-				type="number"
-				onChange={(e) => {
-					const { value } = e.target;
-					if (!value) return;
-					setDigit(+value);
-				}}
-			/>
 			<MNISTDraw setProcessedImage={setProcessedImage} />
-			<Button type="submit" onClick={handleGenerateProof}>
+			{/* <Button type="submit" onClick={handleGenerateProof}>
 				Generate Proof
 			</Button>
 			{proof && (
 				<div className="mt-4 font-semibold text-lg">Proof: {proof}</div>
-			)}
+			)} */}
 		</div>
 	);
 }

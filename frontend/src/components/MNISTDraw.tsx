@@ -77,10 +77,12 @@ export function MNISTDraw(props: {
 					type="button"
 					onClick={() => {
 						if (!canvasRef.current) return;
-						props.setProcessedImage(processImage(canvasRef.current));
+						const array = processImage(canvasRef.current);
+						navigator.clipboard.writeText(`[${array.join(",")}]`);
+						alert("Copied to clipboard!");
 					}}
 				>
-					Process
+					Copy image
 				</Button>
 				<Button
 					type="reset"
@@ -91,6 +93,27 @@ export function MNISTDraw(props: {
 					Reset grid
 				</Button>
 			</div>
+		</div>
+	);
+}
+
+function ProcessedImg({ processedImage }: { processedImage: number[] }) {
+	const width = 28;
+	const height = 28;
+
+	const data = [];
+	for (let i = 0; i < height; i++) {
+		const row = processedImage.slice(i * width, (i + 1) * width).join(",");
+		data.push(row);
+	}
+
+	return (
+		<div>
+			{data.map((row, i) => (
+				<div key={i} className="flex font-mono">
+					{row}
+				</div>
+			))}
 		</div>
 	);
 }
