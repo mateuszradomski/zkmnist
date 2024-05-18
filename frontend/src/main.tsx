@@ -6,23 +6,26 @@ import Layout from "./Layout.tsx";
 import MainPage from "./pages/index.tsx";
 import Verify from "./pages/verify.tsx";
 
-import initNoirC from '@noir-lang/noirc_abi';
-import initACVM from '@noir-lang/acvm_js';
+import initNoirC from "@noir-lang/noirc_abi";
+import initACVM from "@noir-lang/acvm_js";
 
 const InitWasm = ({ children }) => {
-  const [init, setInit] = React.useState(false);
-  useEffect(() => {
-    (async () => {
-      await Promise.all([
-        initNoirC(
-          new URL('@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm', import.meta.url).toString(),
-        ),
-      ]);
-      setInit(true);
-    })();
-  });
+	const [init, setInit] = React.useState(false);
+	useEffect(() => {
+		(async () => {
+			await Promise.all([
+				initNoirC(
+					new URL(
+						"@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm",
+						import.meta.url,
+					).toString(),
+				),
+			]);
+			setInit(true);
+		})();
+	});
 
-    return <div>{init && children}</div>;
+	return <div>{init && children}</div>;
 };
 
 const router = createBrowserRouter([
@@ -30,9 +33,9 @@ const router = createBrowserRouter([
 		path: "/",
 		element: (
 			<Layout>
-         <InitWasm>
-				<MainPage />
-        </InitWasm>
+				<InitWasm>
+					<MainPage />
+				</InitWasm>
 			</Layout>
 		),
 	},
@@ -49,6 +52,6 @@ const router = createBrowserRouter([
 // biome-ignore lint/style/noNonNullAssertion:
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
-            <RouterProvider router={router} />
+		<RouterProvider router={router} />
 	</React.StrictMode>,
 );
