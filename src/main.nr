@@ -223,10 +223,10 @@ fn forward_prop(
     w_output: [Float; OUTPUT_SIZE]
 ) -> Field {
     // @luca make sure this is 0.0 and 4.0
-    let floatZero = Float { sign: 0, exponent: 0, mantissa: 0 };
-    let floatOne = Float { sign: 0, exponent: 100, mantissa: 1 };
+    let floatZero = Float { sign: 0, exponent: 100, mantissa: 0 };
+    let floatOne = Float { sign: 0, exponent: 94, mantissa: 1000000 };
+    let floatFour = Float { sign: 0, exponent: 94, mantissa: 4000000 };
     let lookupTable = [floatZero, floatOne];
-    let floatFour = Float { sign: 0, exponent: 0, mantissa: 4 };
     let mut conv_img = [floatZero; CONV_IMAGE_SIZE_WITH_BIAS];
 
     for i in 0..K {
@@ -239,7 +239,7 @@ fn forward_prop(
             conv_img[i * 14 + j] = divFloats(conv_img[i * 14 + j], floatFour);
         }
     }
-    conv_img[196] = Float{ sign: 0, exponent: 100, mantissa: 1 }; // @luca make sure this is 1.0
+    conv_img[196] = floatOne;
 
     for i in 0..HIDDEN_SIZE {
         let mut sum = floatZero;
