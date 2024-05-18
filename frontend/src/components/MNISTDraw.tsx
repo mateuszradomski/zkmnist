@@ -49,8 +49,7 @@ export function MNISTDraw(props: {
 		if (!ctxScaled)
 			throw new Error("Could not get 2d context for scaled canvas");
 
-		ctxScaled.save();
-		ctxScaled.clearRect(0, 0, ctxScaled.canvas.height, ctxScaled.canvas.width);
+		ctxScaled.clearRect(0, 0, 28, 28);
 		ctxScaled.scale(28.0 / ctx.canvas.width, 28.0 / ctx.canvas.height);
 		ctxScaled.drawImage(canvas, 0, 0);
 		const { data } = ctxScaled.getImageData(0, 0, 28, 28);
@@ -79,7 +78,7 @@ export function MNISTDraw(props: {
 						if (!canvasRef.current) return;
 						const array = processImage(canvasRef.current);
 						navigator.clipboard.writeText(`[${array.join(",")}]`);
-						alert("Copied to clipboard!");
+						
 					}}
 				>
 					Copy image
