@@ -272,7 +272,6 @@ unconstrained fn forward_prop(
         esum = addFloats(esum, layer_output[i]);
     }
 
-    println(layer_output);
     let mut max = layer_output[0];
     let mut imax = 0;
     for i in 0..DIGITS {
@@ -293,11 +292,19 @@ fn main(
     img: [Field; IMAGE_SIZE],
     w_hidden: [Float; HIDDEN_SIZE],
     w_output: [Float; OUTPUT_SIZE],
-    digit: pub Field
+    digit: pub Field,
+    score: pub Field
 ) {
     let output = forward_prop(img, w_hidden, w_output);
     println(output);
     assert(output == digit);
+    let mut computed_score = 0;
+    for i in 0..N {
+        for j in 0..N {
+            computed_score += img[i * N + j];
+        }
+    }
+    assert(computed_score == score);
 }
 
 /*
