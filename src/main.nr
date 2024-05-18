@@ -9,7 +9,7 @@ struct Float {
 global precision : Field = 7;
 
 // ReLU activation function used for neural network ML models
-fn relu(x: Float) -> Float {
+unconstrained fn relu(x: Float) -> Float {
     let mut res = x;
     if x.sign as u64 == 1 {
         res = Float { sign: 0, mantissa: 0, exponent: 100 };
@@ -19,7 +19,7 @@ fn relu(x: Float) -> Float {
 }
 
 // Truncate Float to "precision" number of digits, 5 in the example
-fn truncate(num: Float) -> Float {
+unconstrained fn truncate(num: Float) -> Float {
     let lookup : [Field; 25] = [
         1,
         10,
@@ -77,7 +77,7 @@ fn truncate(num: Float) -> Float {
 }
 
 // Multiplication of Float numbers
-fn mulFloats(x: Float, y: Float) -> Float {
+unconstrained fn mulFloats(x: Float, y: Float) -> Float {
     let mant = x.mantissa * y.mantissa;
     let exp = x.exponent + y.exponent - 100;
     let mut sign : Field = 0;
@@ -90,7 +90,7 @@ fn mulFloats(x: Float, y: Float) -> Float {
 }
 
 // Dividing of Float numbers
-fn divFloats(x: Float, y: Float) -> Float {
+unconstrained fn divFloats(x: Float, y: Float) -> Float {
     assert(y.mantissa as u64 > 0);
 
     let mut exp1: Field = x.exponent;
@@ -129,7 +129,7 @@ fn divFloats(x: Float, y: Float) -> Float {
 }
 
 // Sumation of Float numbers
-fn addFloats(x: Float, y: Float) -> Float {
+unconstrained fn addFloats(x: Float, y: Float) -> Float {
     let mut mant_1 = x.mantissa;
     let mut mant_2 = y.mantissa;
 
@@ -170,14 +170,14 @@ fn addFloats(x: Float, y: Float) -> Float {
 }
 
 // Subtraction of float numbers
-fn subFloats(x: Float, y: Float) -> Float {
+unconstrained fn subFloats(x: Float, y: Float) -> Float {
     addFloats(
         x,
         Float { sign: 1 - y.sign, mantissa: y.mantissa, exponent: y.exponent }
     )
 }
 
-fn isGreaterFloats(x: Float, y: Float) -> bool {
+unconstrained fn isGreaterFloats(x: Float, y: Float) -> bool {
     let mut result = false;
 
     if x.sign as u64 == 1 {
@@ -207,11 +207,11 @@ fn isGreaterFloats(x: Float, y: Float) -> bool {
     result
 }
 
-fn taylorExponent(x: Float) -> Float {
-  let floatHalf = Float { sign: 0, exponent: 93, mantissa: 5000000 };
-  let floatOne = Float { sign: 0, exponent: 100, mantissa: 1 };
-  // 1 + x + 0.5x^2
-  addFloats(addFloats(floatOne, x), mulFloats(mulFloats(x, x), floatHalf))
+unconstrained fn taylorExponent(x: Float) -> Float {
+    let floatHalf = Float { sign: 0, exponent: 93, mantissa: 5000000 };
+    let floatOne = Float { sign: 0, exponent: 100, mantissa: 1 };
+    // 1 + x + 0.5x^2
+    addFloats(addFloats(floatOne, x), mulFloats(mulFloats(x, x), floatHalf))
 }
 
 global N = 28;
@@ -221,14 +221,15 @@ global DIGITS = 10;
 global IMAGE_SIZE = N * N;
 global CONV_IMAGE_SIZE = K * K;
 global CONV_IMAGE_SIZE_WITH_BIAS = CONV_IMAGE_SIZE + 1;
-global HIDDEN_SIZE = IMAGE_SIZE * CONV_IMAGE_SIZE;
-global OUTPUT_SIZE = CONV_IMAGE_SIZE * DIGITS;
+global HIDDEN_SIZE = 19700;
+global OUTPUT_SIZE = 1010;
 
-fn forward_prop(
+unconstrained fn forward_prop(
     img: [Field; IMAGE_SIZE],
     w_hidden: [Float; HIDDEN_SIZE],
     w_output: [Float; OUTPUT_SIZE]
 ) -> Field {
+    // 0.471 sec
     // @luca make sure this is 0.0 and 4.0
     let floatZero = Float { sign: 0, exponent: 100, mantissa: 0 };
     let floatOne = Float { sign: 0, exponent: 94, mantissa: 1000000 };
@@ -236,6 +237,7 @@ fn forward_prop(
     let lookupTable = [floatZero, floatOne];
     let mut conv_img = [floatZero; CONV_IMAGE_SIZE_WITH_BIAS];
 
+    // 11.420 sec
     for i in 0..K {
         for j in 0..K {
             let mut sum = floatZero;
@@ -246,9 +248,10 @@ fn forward_prop(
             conv_img[i * 14 + j] = divFloats(conv_img[i * 14 + j], floatFour);
         }
     }
+
     conv_img[196] = floatOne;
 
-    for i in 0..HIDDEN_SIZE {
+    for i in 0..100 {
         let mut sum = floatZero;
         for j in 0..CONV_IMAGE_SIZE_WITH_BIAS {
             sum = addFloats(sum, mulFloats(conv_img[j], w_hidden[i * CONV_IMAGE_SIZE_WITH_BIAS + j]));
@@ -260,8 +263,8 @@ fn forward_prop(
     let mut layer_output = [floatZero; DIGITS];
     for i in 0..DIGITS {
         let mut sum = floatZero;
-        for j in 0..HIDDEN_SIZE {
-            sum = addFloats(sum, mulFloats(conv_img[j], w_output[i * HIDDEN_SIZE + j]));
+        for j in 0..100 {
+            sum = addFloats(sum, mulFloats(conv_img[j], w_output[i * 100 + j]));
         }
         layer_output[i] = taylorExponent(sum);
         esum = addFloats(esum, layer_output[i]);
@@ -270,6 +273,9 @@ fn forward_prop(
     let mut max = layer_output[0];
     let mut imax = 0;
     for i in 0..DIGITS {
+        println(i);
+        println(layer_output[i]);
+        println(max);
         if isGreaterFloats(layer_output[i], max) {
             max = layer_output[i];
             imax = i;
@@ -280,16 +286,19 @@ fn forward_prop(
     imax as Field
 }
 
-/*
-fn main(img: [Field; IMAGE_SIZE],
-        w_hidden: pub [Float; HIDDEN_SIZE],
-        w_output: pub [Float; OUTPUT_SIZE],
-        digit: pub Field) {
+fn main(
+    img: [Field; IMAGE_SIZE],
+    w_hidden: pub [Float; HIDDEN_SIZE],
+    w_output: pub [Float; OUTPUT_SIZE],
+    digit: pub Field
+) {
+    println("here");
     let output = forward_prop(img, w_hidden, w_output);
+    println(output);
     assert(output == digit);
 }
-*/
 
+/*
 fn main(x: Float, y: Float) {
     println(x);
     println(y);
@@ -308,3 +317,4 @@ fn test_main() {
         Float { sign: 0, mantissa: 19278346, exponent: 100 }
     );
 }
+*/
