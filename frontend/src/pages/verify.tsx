@@ -8,13 +8,15 @@ import {
 } from "@noir-lang/backend_barretenberg";
 import circuit from "../../../target/mnist.json";
 import ConfettiExplosion from 'react-confetti-explosion';
+import Explosion from "react-explode/Negros";
 
 
 function Verify() {
 	const [proof, setProof] = useState("");
 	const [noir, setNoir] = useState<Noir>();
 	const [digit, setDigit] = useState("");
-  const [isExploding, setIsExploding] = useState(false);
+  const [isConfetti, setConfetti] = useState(false);
+  const [isExploding, setExploding] = useState(false);
 
 
 
@@ -36,21 +38,29 @@ function Verify() {
 		});
 		console.log("Verification result: ", result);
     if (result) {
-      setIsExploding(true);
+      setConfetti(true);
+      alert("Proof is valid!");
+    } else {
+      setExploding(true);
+      alert("Proof is invalid!");
     }
+
+    setProof("");
+    setDigit("");
+    setConfetti(false);
 	}
 
 	return (
 		<div className="w-full flex flex-col gap-4 items-center justify-center">
 			<div className="w-[560px]">
 				<h1 className="text-2xl mb-2 font-semibold">Verify proof</h1>
-
 				<Input label="Digit" value={digit} setValue={setDigit} />
 				<Textarea label="Proof" value={proof} setValue={setProof} />
 				<div className="flex w-full justify-end mt-4">
 					<Button type="button" onClick={() => handleOffChainVerification()}>
 						Verify proof
-            {isExploding && <ConfettiExplosion />}
+            {isConfetti && <ConfettiExplosion />}
+            {isExploding && <Explosion />}
 					</Button>
 				</div>
 			</div>
