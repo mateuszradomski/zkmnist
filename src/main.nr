@@ -175,6 +175,46 @@ fn subFloats(x : Float, y : Float) -> Float {
     addFloats(x, Float { sign: 1 - y.sign, mantissa: y.mantissa, exponent: y.exponent })
 }
 
+fn isGreaterFloats(x: Float, y: Float) -> bool {
+    let mut result = false;
+
+    if x.sign as u64 == 1 {
+        if y.sign as u64 == 0 {
+            result = false;
+        } else {
+            if x.exponent as u64 > y.exponent as u64 {
+                result = false;
+            } else if x.exponent as u64 < y.exponent as u64 {
+                result = true;
+            } else {
+                if x.mantissa as u64 > y.mantissa as u64 {
+                    result = false;
+                } else {
+                    result = true;
+                }
+            }
+        }
+    } else {
+        if y.sign as u64 == 1 {
+            result = true;
+        } else {
+            if x.exponent as u64 > y.exponent as u64 {
+                result = true;
+            } else if x.exponent as u64 < y.exponent as u64 {
+                result = false;
+            } else {
+                if x.mantissa as u64 > y.mantissa as u64 {
+                    result = true;
+                } else {
+                    result = false;
+                }
+            }
+        }
+    }
+
+    result
+}
+
 global N = 28;
 global K = 14;
 global DIGITS = 10;
@@ -186,58 +226,62 @@ global HIDDEN_SIZE = IMAGE_SIZE * CONV_IMAGE_SIZE;
 global OUTPUT_SIZE = CONV_IMAGE_SIZE * DIGITS;
 
 fn forward_prop(img: [Field; IMAGE_SIZE],
-                w_hidden: [Field; HIDDEN_SIZE],
-                w_output: [Field; OUTPUT_SIZE]) -> Field {
-    let mut conv_img = [0; CONV_IMAGE_SIZE_WITH_BIAS];
+                w_hidden: [Float; HIDDEN_SIZE],
+                w_output: [Float; OUTPUT_SIZE]) -> Field {
+    // @luca make sure this is 0.0 and 4.0
+    let floatZero = Float{ sign: 0, exponent: 0, mantissa: 0 };
+    let floatOne = Float{ sign: 0, exponent: 100, mantissa: 1 };
+    let lookupTable = [ floatZero, floatOne ];
+    let floatFour = Float{ sign: 0, exponent: 0, mantissa: 4 };
+    let mut conv_img = [floatZero; CONV_IMAGE_SIZE_WITH_BIAS];
 
     for i in 0..K {
         for j in 0..K {
-            let mut sum = 0; // @luca this is 0.0
-            sum += img[2 * i * 28 + 2 * j];
-            sum += img[2 * i * 28 + (2 * j + 1)];
-            sum += img[(2 * i + 1) * 28 + 2 * j];
-            sum += img[(2 * i + 1) * 28 + (2 * j + 1)];
-            conv_img[i * 14 + j] = sum; // @luca this should divided by 4.0 (/ 4.0);
+            let mut sum = floatZero;
+            sum = addFloats(sum, lookupTable[img[2 * i * 28 + 2 * j]]);
+            sum = addFloats(sum, lookupTable[img[2 * i * 28 + (2 * j + 1)]]);
+            sum = addFloats(sum, lookupTable[img[(2 * i + 1) * 28 + 2 * j]]);
+            sum = addFloats(sum, lookupTable[img[(2 * i + 1) * 28 + (2 * j + 1)]]);
+            conv_img[i * 14 + j] = divFloats(conv_img[i * 14 + j], floatFour);
         }
     };
-    conv_img[196] = 1; // @luca this should be set to 1.0
+    conv_img[196] = Float{ sign: 0, exponent: 100, mantissa: 1 }; // @luca make sure this is 1.0
 
     for i in 0..HIDDEN_SIZE {
-        let mut sum = 0; // @luca this is 0.0
+        let mut sum = floatZero;
         for j in 0..CONV_IMAGE_SIZE_WITH_BIAS {
-            sum += conv_img[j] * w_hidden[i * CONV_IMAGE_SIZE_WITH_BIAS + j];
+            sum = addFloats(sum, mulFloats(conv_img[j], w_hidden[i * CONV_IMAGE_SIZE_WITH_BIAS + j]));
         }
-        conv_img[i] = sum; //TODO(radomski): this should be [relu(sum)];
+        conv_img[i] = relu(sum);
     }
 
-    let mut esum = 0; // @luca this is 0.0
-    let mut layer_output = [0; DIGITS];
+    let mut esum = floatZero;
+    let mut layer_output = [floatZero; DIGITS];
     for i in 0..DIGITS {
-        let mut sum = 0; // @luca this is 0.0
+        let mut sum = floatZero;
         for j in 0..HIDDEN_SIZE {
-            sum += conv_img[j] * w_output[i * HIDDEN_SIZE + j];
+            sum = addFloats(sum, mulFloats(conv_img[j], w_output[i * HIDDEN_SIZE + j]));
         }
         layer_output[i] = sum; // @luca this should be Math.exp(sum);
-        esum += layer_output[i];
+        esum = addFloats(esum, layer_output[i]);
     }
 
     let mut max = layer_output[0];
     let mut imax = 0;
     for i in 0..DIGITS {
-        // TODO(radomski): How do we handle floating point comparision
-        if layer_output[i] as u64 > max as u64 {
+        if isGreaterFloats(layer_output[i], max) {
             max = layer_output[i];
             imax = i;
         }
-        layer_output[i] = layer_output[i] / esum;
+        layer_output[i] = divFloats(layer_output[i], esum);
     }
 
     imax as Field
 }
 
 fn main(img: [Field; IMAGE_SIZE],
-        w_hidden: pub [Field; HIDDEN_SIZE],
-        w_output: pub [Field; OUTPUT_SIZE],
+        w_hidden: pub [Float; HIDDEN_SIZE],
+        w_output: pub [Float; OUTPUT_SIZE],
         digit: pub Field) {
 
     assert(img[0] != 4);
