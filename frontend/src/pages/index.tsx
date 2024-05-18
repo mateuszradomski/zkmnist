@@ -21,6 +21,9 @@ function MainPage() {
 				<MNISTBoard grid={grid} setGrid={setGrid} />
 				<div className="flex w-full justify-between mt-4">
 					<Button type="button" onClick={resetGrid}>
+						Generate proof
+					</Button>
+					<Button type="button" onClick={resetGrid}>
 						Reset grid
 					</Button>
 				</div>

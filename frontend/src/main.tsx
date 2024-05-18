@@ -4,6 +4,7 @@ import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./Layout.tsx";
 import MainPage from "./pages/index.tsx";
+import Verify from "./pages/verify.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "verify",
-		element: <Layout>Verify</Layout>,
+		element: (
+			<Layout>
+				<Verify />
+			</Layout>
+		),
 	},
 ]);
 
