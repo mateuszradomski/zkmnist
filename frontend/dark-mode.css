@@ -1,0 +1,27 @@
+/*.css */
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Style links in dark mode */
+a {
+    color: #bb86fc;
+}
+
+/* Style textareas in dark mode */
+textarea {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+/* Style inputs in dark mode */
+input {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+/* Additional styles for other elements in dark mode can be added here */
+

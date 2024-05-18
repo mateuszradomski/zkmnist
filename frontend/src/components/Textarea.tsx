@@ -25,7 +25,7 @@ export default function Textarea({
         value={value}
         onChange={(e) => setValue(e.currentTarget.value)}
         className={cn(
-          "bg-gray-200 rounded border p-1 font-medium border-gray-300 w-full min-h-20",
+          "rounded border p-1 font-medium w-full min-h-20",
           className
         )}
       />
@@ -48,7 +48,7 @@ export function Input({
         value={value}
         onChange={(e) => setValue(e.currentTarget.value)}
         className={cn(
-          "bg-gray-200 rounded border p-1 font-medium border-gray-300 w-full",
+          "rounded border p-1 font-medium w-full",
           className
         )}
       />
