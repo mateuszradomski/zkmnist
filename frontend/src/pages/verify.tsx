@@ -9,7 +9,8 @@ import {
 import circuit from "../../../target/mnist.json";
 import ConfettiExplosion from "react-confetti-explosion";
 import explosionImg from "../../static/explosion.gif";
-import { BaseEmoji } from '@oktupol/base-emoji';
+import { BaseEmoji } from "@oktupol/base-emoji";
+import { useOnChainVerification } from "../hooks/useOnChainVerification";
 
 function Verify() {
 	const [proof, setProof] = useState("");
@@ -25,10 +26,15 @@ function Verify() {
 		setNoir(noir);
 	}, []);
 
+  const proofAsByteArray = byteArrFromHexStr(proof);
+  useOnChainVerification({ proof: proofAsByteArray, publicInputs: [digit] });
+
 	async function handleOffChainVerification() {
 		if (!proof || !noir || !digit) return;
 
-        const proofDecoded = BaseEmoji.decode(proof, { format: 'string' }) as string;
+		const proofDecoded = BaseEmoji.decode(proof, {
+			format: "string",
+		}) as string;
 		const proofAsByteArray = byteArrFromHexStr(proofDecoded);
 		console.log("Verifying...");
 		const result = await noir.verifyProof({
@@ -38,7 +44,6 @@ function Verify() {
 		console.log("Verification result: ", result);
 		if (result) {
 			setIsExploding(true);
-			alert("Proof verified successfully!");
 		} else {
 			setIsBurning(true);
 			setTimeout(() => {
@@ -53,9 +58,14 @@ function Verify() {
 				<h1 className="text-2xl mb-2 font-semibold">Verify proof</h1>
 
 				<Input label="Digit" value={digit} setValue={setDigit} />
-            </div>
-            <div className="w-full h-screen">
-				<Textarea label="Proof" value={proof} setValue={setProof} className="w-full h-screen" />
+			</div>
+			<div className="w-full h-screen">
+				<Textarea
+					label="Proof"
+					value={proof}
+					setValue={setProof}
+					className="w-full h-screen"
+				/>
 				<div className="flex w-full justify-end mt-4">
 					<Button
 						className="relative"
@@ -73,19 +83,9 @@ function Verify() {
 						)}
 						{isBurning && (
 							<div className="absolute flex -left-60 -top-32">
-								<img
-									src={explosionImg}
-									className="w-48 h-48"
-									alt="Explosion"
-								/><img
-									src={explosionImg}
-									className="w-48 h-48"
-									alt="Explosion"
-								/><img
-									src={explosionImg}
-									className="w-48 h-48"
-									alt="Explosion"
-								/>
+								<img src={explosionImg} className="w-48 h-48" alt="Explosion" />
+								<img src={explosionImg} className="w-48 h-48" alt="Explosion" />
+								<img src={explosionImg} className="w-48 h-48" alt="Explosion" />
 							</div>
 						)}
 					</Button>

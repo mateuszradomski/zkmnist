@@ -78,7 +78,6 @@ export function MNISTDraw(props: {
 						if (!canvasRef.current) return;
 						const array = processImage(canvasRef.current);
 						navigator.clipboard.writeText(`[${array.join(",")}]`);
-						
 					}}
 				>
 					Copy image

@@ -8,6 +8,10 @@ import Verify from "./pages/verify.tsx";
 
 import initNoirC from "@noir-lang/noirc_abi";
 import initACVM from "@noir-lang/acvm_js";
+import { WagmiProvider } from "wagmi";
+import { config } from "./config.ts";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const InitWasm = ({ children }) => {
 	const [init, setInit] = React.useState(false);
@@ -28,6 +32,8 @@ const InitWasm = ({ children }) => {
 	return <div>{init && children}</div>;
 };
 
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -43,7 +49,11 @@ const router = createBrowserRouter([
 		path: "verify",
 		element: (
 			<Layout>
-				<Verify />
+				<WagmiProvider config={config}>
+					<QueryClientProvider client={queryClient}>
+						<Verify />
+					</QueryClientProvider>
+				</WagmiProvider>
 			</Layout>
 		),
 	},
