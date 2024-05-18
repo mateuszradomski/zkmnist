@@ -3,13 +3,13 @@ import cn from "../utils/cn";
 
 const SIZE = 28;
 
-export default function MNISTBoard() {
+interface MNISTBoardProps {
+	grid: number[][];
+	setGrid: (grid: number[][]) => void;
+}
+
+export default function MNISTBoard({ grid, setGrid }: MNISTBoardProps) {
 	const [mouseDown, setMouseDown] = useState(false);
-	const [grid, setGrid] = useState(
-		Array(SIZE)
-			.fill(null)
-			.map(() => Array(SIZE).fill(0)),
-	);
 
 	const handleDraw = useCallback(
 		(x: number, y: number) => {
@@ -19,7 +19,7 @@ export default function MNISTBoard() {
 			newArray[x][y] = grid[x][y] === 0 ? 1 : 0;
 			setGrid(newArray);
 		},
-		[mouseDown, grid],
+		[mouseDown, grid, setGrid],
 	);
 
 	return (
