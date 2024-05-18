@@ -295,7 +295,6 @@ fn main(
     w_output: pub [Float; OUTPUT_SIZE],
     digit: pub Field
 ) {
-    println("here");
     let output = forward_prop(img, w_hidden, w_output);
     println(output);
     assert(output == digit);
