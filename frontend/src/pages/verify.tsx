@@ -1,9 +1,14 @@
 import { useState } from "react";
 import Button from "../components/Button";
 import Textarea from "../components/Textarea";
+import { noir } from "../utils/noir";
 
 function Verify() {
 	const [proof, setProof] = useState<string>("");
+
+	// const verifyProof = async () => {
+	// 	noir?.verifyProof(proof);
+	// };
 
 	return (
 		<div className="w-full flex flex-col gap-4 items-center justify-center">
