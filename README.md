@@ -10,6 +10,8 @@ The proof is ran through the verifier generated from the circuit and if it passe
 Verifier without needing the used input image confirms all the calculations done by the model.
 Each digit is like a category in speed-running leader board where the proof is like the twitch recording made to confirm that you actually did it.
 
+You can interact with verifiers deployed on [Ethereum](https://sepolia.etherscan.io/address/0xbb22218723a42ee6b3bfc62d50648c8ea8003e18) and [zkSync Era](https://sepolia.explorer.zksync.io/address/0xf2535F2149aB3A0b293A760085e7913A209d90f3#transactions).
+
 ## Generate a proof
 
 To submit your entry into the game you need to generate a proof that you
