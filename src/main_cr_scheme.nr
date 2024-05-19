@@ -288,9 +288,12 @@ unconstrained fn forward_prop(
     imax as Field
 }
 
+use dep::std::hash;
+
 fn main(
     img: [Field; IMAGE_SIZE],
-    img_hash: pub [u8; 32],
+    blinded_img_hash: pub Field,
+    blinding_factor: [Field; 32],
     w_hidden: [Float; HIDDEN_SIZE],
     w_output: [Float; OUTPUT_SIZE],
     digit: pub Field,
@@ -307,8 +310,10 @@ fn main(
     }
     assert(computed_score == score);
 
-    let hash = std::hash::sha256(img);
-    assert(hash == img_hash);
+    let img_hash = hash::pedersen_hash(img);
+    let img_hash_with_blinding = blinding_factor.as_slice().push_back(img_hash);
+    let computed_blinded_img_hash = hash::pedersen_hash(img_hash_with_blinding.as_array());
+    assert(blinded_img_hash == computed_blinded_img_hash);
 }
 
 /*
