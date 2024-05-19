@@ -12,6 +12,19 @@ Each digit is like a category in speed-running leader board where the proof is l
 
 You can interact with verifiers deployed on [Ethereum](https://sepolia.etherscan.io/address/0xbb22218723a42ee6b3bfc62d50648c8ea8003e18) and [zkSync Era](https://sepolia.explorer.zksync.io/address/0xf2535F2149aB3A0b293A760085e7913A209d90f3#transactions).
 
+Using the verifier example:
+
+```
+# Correct public inputs
+m@Mateuszs-MacBook-Pro zkmnist % cast call --rpc-url='https://sepolia.gateway.tenderly.co' 0xBB22218723a42eE6B3BfC62D50648c8eA8003e18 "verify(bytes, bytes32[])" `cat proofs/mnist.proof` "[0x0000000000000000000000000000000000000000000000000000000000000002, 0x0000000000000000000000000000000000000000000000000000000000000052]"
+0x0000000000000000000000000000000000000000000000000000000000000001
+
+# Invalid public inputs
+m@Mateuszs-MacBook-Pro zkmnist % cast call --rpc-url='https://sepolia.gateway.tenderly.co' 0xBB22218723a42eE6B3BfC62D50648c8eA8003e18 "verify(bytes, bytes32[])" `cat proofs/mnist.proof` "[0x0000000000000000000000000000000000000000000000000000000000000004, 0x0000000000000000000000000000000000000000000000000000000000000052]"
+Error: 
+(code: 3, message: execution reverted, data: Some(String("0xd71fd263")))
+```
+
 ## Generate a proof
 
 To submit your entry into the game you need to generate a proof that you
