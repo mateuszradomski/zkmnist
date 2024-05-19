@@ -22,15 +22,15 @@ export default function MNISTBoard({ grid, setGrid }: MNISTBoardProps) {
 		[mouseDown, grid, setGrid],
 	);
 
-  const handleClick = useCallback(
-    (x: number, y: number) => {
-      const newArray = [];
-      for (let i = 0; i < grid.length; i++) newArray[i] = grid[i].slice();
-      newArray[x][y] = newArray[x][y] === 1 ? 0 : 1;
-      setGrid(newArray);
-    },
-    [grid, setGrid],
-  );
+	const handleClick = useCallback(
+		(x: number, y: number) => {
+			const newArray = [];
+			for (let i = 0; i < grid.length; i++) newArray[i] = grid[i].slice();
+			newArray[x][y] = newArray[x][y] === 1 ? 0 : 1;
+			setGrid(newArray);
+		},
+		[grid, setGrid],
+	);
 
 	return (
 		<div
@@ -51,7 +51,7 @@ export default function MNISTBoard({ grid, setGrid }: MNISTBoardProps) {
 						x={a}
 						y={i}
 						handleDraw={handleDraw}
-            handleClick={handleClick}
+						handleClick={handleClick}
 						value={c}
 					/>
 				)),
@@ -65,18 +65,20 @@ interface CellProps {
 	y: number;
 	value: number;
 	handleDraw: (x: number, y: number) => void;
-  handleClick: (x: number, y: number) => void;
+	handleClick: (x: number, y: number) => void;
 }
 
-const Cell: React.FC<CellProps> = memo(({ x, y, value, handleDraw, handleClick }) => {
-	return (
-		<div
-			className={cn(
-				"w-[20px] h-[20px] border border-black",
-				value === 1 ? "bg-black" : "bg-white",
-			)}
-			onMouseEnter={() => handleDraw(x, y)}
-      onClick={() => handleClick(x, y)}
-		/>
-	);
-});
+const Cell: React.FC<CellProps> = memo(
+	({ x, y, value, handleDraw, handleClick }) => {
+		return (
+			<div
+				className={cn(
+					"w-[20px] h-[20px] border border-black",
+					value === 1 ? "bg-black" : "bg-white",
+				)}
+				onMouseEnter={() => handleDraw(x, y)}
+				onClick={() => handleClick(x, y)}
+			/>
+		);
+	},
+);

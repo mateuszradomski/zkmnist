@@ -19,7 +19,7 @@ export default function Button({
 			type={type}
 			onClick={onClick}
 			className={cn(
-				"text-white bg-black px-4 py-2 rounded-md hover:bg-gray-800 transition-colors duration-150",
+				"text-main border border-main px-4 py-2 rounded-md hover:bg-secondary transition-colors duration-150",
 				className,
 			)}
 		>
