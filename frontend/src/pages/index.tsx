@@ -57,11 +57,16 @@ function MainPage() {
 	const [noir, setNoir] = useState<Noir>();
 	const [digit, setDigit] = useState<number>();
 	const [grid, setGrid] = useState<number[][]>(emptyGrid);
+  const [score, setScore] = useState<number>();
 
 	useEffect(() => {
 		// convert grid to processedImage
 		const processedImage = grid.flat();
 		setProcessedImage(processedImage);
+    const calculatedScore = processedImage.reduce((acc, curr) => {
+      return curr === 1 ? acc + 1 : acc;
+    })
+    setScore(calculatedScore);
 	}, [grid]);
 
 	useEffect(() => {
@@ -101,6 +106,9 @@ function MainPage() {
 		<div className="w-full flex flex-col gap-4 items-center justify-center">
 			{/** Input digit */}
 			<div className="flex flex-col items-center">
+      <div className="text-main p-4 text-xl">
+          <h2>Score: <strong>{score}</strong></h2>
+        </div>
 				<MNISTBoard grid={grid} setGrid={setGrid} />
 				<div className="flex w-full justify-between mt-4">
 					<Button
