@@ -28,3 +28,11 @@ any EVM compliant chain. To actually do it, follow these steps:
 
 - `nargo codegen-verifier`
 - `forge create --rpc-url='<url>' UltraVerifier`
+
+
+## Challenges faced
+
+We used [zkFloat](https://github.com/0x3327/ZKFloat) library, and a surprisingly big issue was understanding it's logic. This implementation was a big help, but confirming that those calculations are valid took us some time.
+
+We were first planning to run the prover in the browser. After fighting with NoirJs compatibility issues, we stumbled upon `Unreachable` error from WASM. After further investigation, we realized that our model is using over 4GB or RAM (when proving from CLI), so, with WASM overhead, it turned out to be impossible to prove our circuit in the browser client. After confirming with person working in Noir team, they confirmed, that the amount of RAM used can be caused by not optimal approach of the noir compiler, especially regarding matrix multiplication. Noir is still in it's early development state, so it is entirely possible that future versions of the compiler would be able to prove in browser.
+
