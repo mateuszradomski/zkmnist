@@ -1,48 +1,30 @@
-# Install Nargo
+# zkMNIST Game
 
-`curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash`
+zkMNIST is a proof of concept game that explores the possibility of running a
+neural network inside a zero knowledge circuit. Game has the following rules:
 
-# Run Noirup
+The goal is to draw a number with the least amount of pixels activated that will be recognized by the model as some number.
+You can prove that you have such an image without revealing what that image is, to do so you generate a zero-knowledge proof.
+Later, the only thing you need to expose to is the proof, what digit it is and how many pixels are lit up.
+The proof is ran through the verifier generated from the circuit and if it passes your score is added to the leader board.
+Verifier without needing the used input image confirms all the calculations done by the model.
+Each digit is like a category in speed-running leader board where the proof is like the twitch recording made to confirm that you actually did it.
 
-`noirup`
+## Generate a proof
 
-# Do the thing
+To submit your entry into the game you need to generate a proof that you
+actually have an image that has a better score than others. Follow the steps
+below to install `noir` and prove your input with it.
 
-`nargo prove` and `nargo verify`
+- `curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash`
+- `noirup`
+- edit `Prover.toml` to include your image
+- `nargo prove`
 
-# Generate the verifier
+## Deploy the verifier to any evm compliant chain
 
-`nargo codegen-verifier`
+Since the verifier compiles down to a Solidity contract you can deploy it on
+any EVM compliant chain. To actually do it, follow these steps:
 
-## Deploy
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-Make sure you have `anvil` running when deploying locally
-
-```shell
-$ forge script scripts/Deploy.s.sol --fork-url http://localhost:8545 --broadcast
-```
+- `nargo codegen-verifier`
+- `forge create --rpc-url='<url>' UltraVerifier`
